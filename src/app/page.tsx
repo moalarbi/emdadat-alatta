@@ -61,18 +61,17 @@ export default function Home() {
     setSearchQuery('');
     setActiveDept(null);
     setToast({
-      message: 'تم مسح الفلاتر',
       visible: true,
-      type: 'info'
+      type: "info"
     });
   }, []);
-  const handleReportSubmit = useCallback((data: { name: string; ext: string; note: string }) => {
+
   const handleCloseToast = useCallback(() => {
     setToast(prev => ({ ...prev, visible: false }));
   }, []);
+
   return (
     <div className="min-h-screen bg-navy-gradient">
-      {/* Background Effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl" />
