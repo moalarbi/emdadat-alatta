@@ -1,21 +1,13 @@
 'use client';
-
 import { useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Phone } from 'lucide-react';
-
 // Components
 import Header from '@/components/Header';
 import SearchBar from '@/components/SearchBar';
 import DeptTabs from '@/components/DeptTabs';
 import ConversionCard from '@/components/ConversionCard';
-import KpiRow from '@/components/KpiRow';
-import QuickActionsSheet from '@/components/QuickActionsSheet';
-import ReportIssueModal from '@/components/ReportIssueModal';
-import FloatingActionButton from '@/components/FloatingActionButton';
 import Toast from '@/components/Toast';
-import InsightsChart from '@/components/InsightsChart';
-
 // Data & Utils
 import { conversions, RECEPTION_EXT } from '@/data/conversions';
 import { 
@@ -25,7 +17,6 @@ import {
   getMostUsedRange,
   formatDate 
 } from '@/lib/utils';
-
 export default function Home() {
   // State
   const [searchQuery, setSearchQuery] = useState('');
@@ -37,24 +28,20 @@ export default function Home() {
     visible: false,
     type: 'success'
   });
-
   // Computed values
   const filteredConversions = useMemo(() => 
     filterConversions(conversions, searchQuery, activeDept),
     [searchQuery, activeDept]
   );
-
   const deptCounts = useMemo(() => getDeptCounts(conversions), []);
   const rangeBins = useMemo(() => getRangeBins(conversions), []);
   const mostUsedRange = useMemo(() => getMostUsedRange(conversions), []);
   const today = useMemo(() => formatDate(new Date()), []);
-
   const departments = useMemo(() => [
     { id: null, label: 'الكل', count: conversions.length },
     { id: 'المالية', label: 'المالية', count: deptCounts['المالية'] || 0 },
     { id: 'الموارد البشرية', label: 'الموارد البشرية', count: deptCounts['الموارد البشرية'] || 0 },
   ], [deptCounts]);
-
   // Handlers
   const handleCopy = useCallback((ext: number) => {
     setToast({
@@ -63,7 +50,6 @@ export default function Home() {
       type: 'success'
     });
   }, []);
-
   const handleCopyReception = useCallback(() => {
     setToast({
       message: `تم نسخ رقم الاستقبال ${RECEPTION_EXT} ✅`,
@@ -71,7 +57,6 @@ export default function Home() {
       type: 'success'
     });
   }, []);
-
   const handleClearFilters = useCallback(() => {
     setSearchQuery('');
     setActiveDept(null);
@@ -81,7 +66,6 @@ export default function Home() {
       type: 'info'
     });
   }, []);
-
   const handleReportSubmit = useCallback((data: { name: string; ext: string; note: string }) => {
     console.log('Report submitted:', data);
     setToast({
@@ -90,11 +74,9 @@ export default function Home() {
       type: 'success'
     });
   }, []);
-
   const handleCloseToast = useCallback(() => {
     setToast(prev => ({ ...prev, visible: false }));
   }, []);
-
   return (
     <div className="min-h-screen bg-navy-gradient">
       {/* Background Effects */}
@@ -102,10 +84,8 @@ export default function Home() {
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl" />
       </div>
-
       {/* Header */}
-      <Header onQuickActionsClick={() => setIsQuickActionsOpen(true)} />
-
+      <Header  />
       {/* Main Content */}
       <main className="relative z-10 max-w-7xl mx-auto px-4 py-6 pb-32">
         {/* Hero Section */}
@@ -124,7 +104,6 @@ export default function Home() {
           >
             <Phone className="w-10 h-10 text-cyan-400" />
           </motion.div>
-
           <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
             دليل تحويلات EMDADAT ALATTA
           </h1>
@@ -132,7 +111,6 @@ export default function Home() {
             ابحث بالاسم أو رقم التحويل للوصول للجهة المختصة خلال ثوانٍ
           </p>
         </motion.section>
-
         {/* Search */}
         <section className="mb-6">
           <SearchBar 
@@ -140,17 +118,7 @@ export default function Home() {
             onChange={setSearchQuery} 
           />
         </section>
-
-        {/* KPI Cards */}
         <section className="mb-6">
-          <KpiRow
-            totalConversions={conversions.length}
-            deptCount={Object.keys(deptCounts).length}
-            mostUsedRange={mostUsedRange}
-            lastUpdated={today}
-          />
-        </section>
-
         {/* Department Tabs */}
         <section className="mb-4">
           <DeptTabs
@@ -159,7 +127,6 @@ export default function Home() {
             onSelect={setActiveDept}
           />
         </section>
-
         {/* Results Count */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -178,7 +145,6 @@ export default function Home() {
             </button>
           )}
         </motion.div>
-
         {/* Conversions List */}
         <section className="space-y-3 mb-8">
           {filteredConversions.length > 0 ? (
@@ -186,7 +152,6 @@ export default function Home() {
               <ConversionCard
                 key={`${conversion.ext}-${conversion.name}`}
                 conversion={conversion}
-                onCopy={handleCopy}
                 index={index}
               />
             ))
@@ -201,12 +166,6 @@ export default function Home() {
             </motion.div>
           )}
         </section>
-
-        {/* Insights Chart */}
-        <section className="mb-8">
-          <InsightsChart data={rangeBins} />
-        </section>
-
         {/* Footer */}
         <footer className="text-center pt-8 border-t border-white/10">
           <p className="text-white/40 text-sm">
@@ -217,26 +176,6 @@ export default function Home() {
           </p>
         </footer>
       </main>
-
-      {/* Floating Action Button */}
-      <FloatingActionButton onClick={() => setIsQuickActionsOpen(true)} />
-
-      {/* Quick Actions Sheet */}
-      <QuickActionsSheet
-        isOpen={isQuickActionsOpen}
-        onClose={() => setIsQuickActionsOpen(false)}
-        onClearFilters={handleClearFilters}
-        onReportIssue={() => setIsReportModalOpen(true)}
-        onCopyReception={handleCopyReception}
-      />
-
-      {/* Report Issue Modal */}
-      <ReportIssueModal
-        isOpen={isReportModalOpen}
-        onClose={() => setIsReportModalOpen(false)}
-        onSubmit={handleReportSubmit}
-      />
-
       {/* Toast */}
       <Toast
         message={toast.message}

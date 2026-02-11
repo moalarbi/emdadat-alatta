@@ -1,13 +1,8 @@
 'use client';
-
 import { motion } from 'framer-motion';
-import { Zap, Phone } from 'lucide-react';
+import { Phone } from 'lucide-react';
 
-interface HeaderProps {
-  onQuickActionsClick: () => void;
-}
-
-export default function Header({ onQuickActionsClick }: HeaderProps) {
+export default function Header() {
   return (
     <motion.header
       initial={{ y: -20, opacity: 0 }}
@@ -26,20 +21,12 @@ export default function Header({ onQuickActionsClick }: HeaderProps) {
               EMDADAT ALATTA
             </span>
           </div>
-
           {/* Center: Title */}
           <h1 className="text-base font-medium text-white/90 absolute left-1/2 transform -translate-x-1/2">
             دليل التحويلات
           </h1>
-
-          {/* Right: Quick Actions Button */}
-          <button
-            onClick={onQuickActionsClick}
-            className="w-10 h-10 rounded-full glass-button flex items-center justify-center"
-            aria-label="الإجراءات السريعة"
-          >
-            <Zap className="w-5 h-5 text-cyan-400" />
-          </button>
+          {/* Right: Empty space for balance */}
+          <div className="w-10 h-10" />
         </div>
       </div>
     </motion.header>
