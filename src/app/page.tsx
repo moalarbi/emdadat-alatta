@@ -24,10 +24,10 @@ export default function Home() {
   );
 
   return (
-    <div className="min-h-screen bg-navy-950 text-white selection:bg-cyan-500/30">
+    <div className="min-h-screen bg-navy-gradient text-white selection:bg-cyan-500/30">
       {/* Background Ambience */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-cyan-500/5 rounded-full blur-[120px]" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-cyan-500/10 rounded-full blur-[120px]" />
       </div>
 
       <Header />
