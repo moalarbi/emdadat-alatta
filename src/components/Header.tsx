@@ -1,34 +1,27 @@
 'use client';
-import { motion } from 'framer-motion';
+
+import React from 'react';
 import { Phone } from 'lucide-react';
 
-export default function Header() {
+const Header = () => {
   return (
-    <motion.header
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
-      className="sticky top-0 z-40 w-full safe-area-top"
-    >
-      <div className="glass-card rounded-none border-x-0 border-t-0 border-b border-white/10 bg-navy-900/80 backdrop-blur-xl">
-        <div className="flex items-center justify-between h-14 px-4 max-w-7xl mx-auto">
-          {/* Left: Logo + Brand */}
-          <div className="flex items-center gap-2">
-            <div className="relative w-8 h-8 flex-shrink-0 rounded-full bg-gradient-to-br from-cyan-400/20 to-cyan-600/20 flex items-center justify-center border border-cyan-400/30">
-              <Phone className="w-4 h-4 text-cyan-400" />
-            </div>
-            <span className="text-sm font-semibold text-white hidden sm:block">
-              EMDADAT ALATTA
-            </span>
+    <header className="sticky top-0 z-50 w-full border-b border-white/5 bg-navy-900/60 backdrop-blur-xl">
+      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center border border-cyan-500/30">
+            <Phone className="w-4 h-4 text-cyan-400" />
           </div>
-          {/* Center: Title */}
-          <h1 className="text-base font-medium text-white/90 absolute left-1/2 transform -translate-x-1/2">
-            دليل التحويلات
-          </h1>
-          {/* Right: Empty space for balance */}
-          <div className="w-10 h-10" />
+          <span className="font-bold text-white tracking-tight">EMDADAT ALATTA</span>
         </div>
+        
+        <div className="absolute left-1/2 -translate-x-1/2 hidden sm:block">
+          <span className="text-white/80 font-medium">دليل التحويلات</span>
+        </div>
+        
+        <div className="w-8" /> {/* Spacer for centering */}
       </div>
-    </motion.header>
+    </header>
   );
-}
+};
+
+export default Header;

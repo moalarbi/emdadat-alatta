@@ -1,93 +1,63 @@
 'use client';
-import { useState, useMemo, useCallback } from 'react';
+
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Phone } from 'lucide-react';
+
 // Components
 import Header from '@/components/Header';
 import SearchBar from '@/components/SearchBar';
-import DeptTabs from '@/components/DeptTabs';
-import ConversionCard from '@/components/ConversionCard';
-import Toast from '@/components/Toast';
-// Data & Utils
-import { conversions, RECEPTION_EXT } from '@/data/conversions';
-import { 
-  filterConversions, 
-  getDeptCounts, 
-  getRangeBins, 
-  getMostUsedRange,
-  formatDate 
-} from '@/lib/utils';
+import ConversionList from '@/components/ConversionList';
+
+// Services & Data
+import { getAllConversions, filterConversions } from '@/services/conversions';
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeDept, setActiveDept] = useState<string | null>(null);
-  const [toast, setToast] = useState({ message: '', visible: false, type: 'success' as 'success' | 'error' | 'info' });
 
-  const deptCounts = useMemo(() => getDeptCounts(conversions), []);
-  
-  const departments = useMemo(() => [
-    { id: null, label: 'الكل', count: conversions.length },
-    { id: 'المالية', label: 'المالية', count: deptCounts['المالية'] || 0 },
-    { id: 'الموارد البشرية', label: 'الموارد البشرية', count: deptCounts['الموارد البشرية'] || 0 },
-  ], [deptCounts]);
+  // Initial data load (memoized)
+  const allConversions = useMemo(() => getAllConversions(), []);
 
+  // Filter logic (with simple "instant" update as per requirements)
   const filteredConversions = useMemo(() => 
-    filterConversions(conversions, searchQuery, activeDept),
-    [searchQuery, activeDept]
+    filterConversions(allConversions, searchQuery),
+    [allConversions, searchQuery]
   );
 
-  const today = useMemo(() => formatDate(new Date()), []);
-
-  const handleClearFilters = useCallback(() => {
-    setSearchQuery('');
-    setActiveDept(null);
-  }, []);
-
-  const handleCloseToast = useCallback(() => {
-    setToast(prev => ({ ...prev, visible: false }));
-  }, []);
-
   return (
-    <div className="min-h-screen bg-navy-gradient">
+    <div className="min-h-screen bg-navy-950 text-white selection:bg-cyan-500/30">
+      {/* Background Ambience */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-cyan-500/5 rounded-full blur-[120px]" />
       </div>
+
       <Header />
-      <main className="relative z-10 max-w-7xl mx-auto px-4 py-6 pb-32">
-        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="text-center mb-8">
-          <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.1 }} className="relative w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-cyan-400/20 via-cyan-500/10 to-purple-500/10 flex items-center justify-center border-2 border-cyan-400/30 shadow-lg shadow-cyan-500/20">
-            <Phone className="w-10 h-10 text-cyan-400" />
-          </motion.div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">دليل تحويلات EMDADAT ALATTA</h1>
-          <p className="text-white/60 text-sm sm:text-base max-w-md mx-auto">ابحث بالاسم أو رقم التحويل للوصول للجهة المختصة خلال ثوانٍ</p>
-        </motion.section>
-        <section className="mb-6"><SearchBar value={searchQuery} onChange={setSearchQuery} /></section>
-        <section className="mb-4"><DeptTabs departments={departments} activeDept={activeDept} onSelect={setActiveDept} /></section>
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-between mb-4">
-          <span className="text-white/50 text-sm">{filteredConversions.length} نتيجة</span>
-          {(searchQuery || activeDept) && (
-            <button onClick={handleClearFilters} className="text-cyan-400 text-sm hover:text-cyan-300 transition-colors">مسح الفلاتر</button>
-          )}
-        </motion.div>
-        <section className="space-y-3 mb-8">
-          {filteredConversions.length > 0 ? (
-            filteredConversions.map((conversion, index) => (
-              <ConversionCard key={`${conversion.ext}-${conversion.name}`} conversion={conversion} index={index} />
-            ))
-          ) : (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass-card p-8 text-center">
-              <p className="text-white/50 mb-2">لا توجد نتائج</p>
-              <p className="text-white/30 text-sm">جرب البحث بكلمات مختلفة</p>
-            </motion.div>
-          )}
+
+      <main className="relative z-10 max-w-5xl mx-auto px-4 py-12">
+        {/* Search Section */}
+        <section className="mb-12">
+          <div className="max-w-2xl mx-auto">
+            <SearchBar 
+              value={searchQuery} 
+              onChange={setSearchQuery} 
+            />
+            <p className="mt-3 text-center text-white/40 text-sm">
+              ابحث بالاسم أو رقم التحويلة
+            </p>
+          </div>
         </section>
-        <footer className="text-center pt-8 border-t border-white/10">
-          <p className="text-white/40 text-sm">EMDADAT ALATTA - دليل التحويلات الداخلية</p>
-          <p className="text-white/30 text-xs mt-1">آخر تحديث: {today}</p>
-        </footer>
+
+        {/* List Section */}
+        <section>
+          <ConversionList conversions={filteredConversions} />
+        </section>
       </main>
-      <Toast message={toast.message} isVisible={toast.visible} onClose={handleCloseToast} type={toast.type} />
+
+      {/* Footer */}
+      <footer className="relative z-10 py-12 border-t border-white/5 text-center">
+        <p className="text-white/30 text-sm">
+          EMDADAT ALATTA — دليل التحويلات الداخلية
+        </p>
+      </footer>
     </div>
   );
 }

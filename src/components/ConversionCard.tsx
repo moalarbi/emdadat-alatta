@@ -1,4 +1,6 @@
 'use client';
+
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Conversion } from '@/data/conversions';
 
@@ -7,31 +9,27 @@ interface ConversionCardProps {
   index: number;
 }
 
-export default function ConversionCard({ conversion, index }: ConversionCardProps) {
+const ConversionCard: React.FC<ConversionCardProps> = ({ conversion, index }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ 
-        duration: 0.3, 
-        delay: index * 0.05,
-        ease: [0.25, 0.46, 0.45, 0.94]
-      }}
-      className="glass-card p-4 flex items-center justify-between gap-4"
+      transition={{ duration: 0.3, delay: index * 0.03 }}
+      className="glass-card p-5 flex items-center justify-between hover:bg-white/5 transition-colors border border-white/5"
     >
-      {/* Left: Info */}
-      <div className="flex-1 min-w-0">
-        <h3 className="text-white font-medium text-lg truncate mb-1.5">
+      <div className="flex flex-col">
+        <span className="text-lg font-bold text-white mb-1">
           {conversion.name}
-        </h3>
+        </span>
       </div>
       
-      {/* Right: Extension Number - Large and Clear */}
-      <div className="flex items-center gap-2 flex-shrink-0">
-        <span className="font-mono text-cyan-400 text-3xl font-bold">
+      <div className="flex items-center">
+        <span className="text-3xl font-mono font-bold text-cyan-400">
           {conversion.ext}
         </span>
       </div>
     </motion.div>
   );
-}
+};
+
+export default ConversionCard;
