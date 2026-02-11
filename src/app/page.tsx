@@ -17,30 +17,35 @@ import {
   getMostUsedRange,
   formatDate 
 } from '@/lib/utils';
-export default function Home() {
-  // State
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeDept, setActiveDept] = useState<string | null>(null);
-  const [isQuickActionsOpen, setIsQuickActionsOpen] = useState(false);
-  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const [toast, setToast] = useState<{ message: string; visible: boolean; type: 'success' | 'error' | 'info' }>({
-    message: '',
-    visible: false,
-    type: 'success'
+
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeDept, setActiveDept] = useState<string | null>(null);
   const [toast, setToast] = useState({ message: '', visible: false, type: 'success' as 'success' | 'error' | 'info' });
+
   const deptCounts = useMemo(() => getDeptCounts(conversions), []);
+  
   const departments = useMemo(() => [
     { id: null, label: 'الكل', count: conversions.length },
     { id: 'المالية', label: 'المالية', count: deptCounts['المالية'] || 0 },
     { id: 'الموارد البشرية', label: 'الموارد البشرية', count: deptCounts['الموارد البشرية'] || 0 },
   ], [deptCounts]);
-  const filteredConversions = useMemo(() => filterConversions(conversions, searchQuery, activeDept), [searchQuery, activeDept]);
+
+  const filteredConversions = useMemo(() => 
+    filterConversions(conversions, searchQuery, activeDept),
+    [searchQuery, activeDept]
+  );
+
   const today = useMemo(() => formatDate(new Date()), []);
-  const handleClearFilters = useCallback(() => { setSearchQuery(''); setActiveDept(null); }, []);
-  const handleCloseToast = useCallback(() => { setToast(prev => ({ ...prev, visible: false })); }, []);
+
+  const handleClearFilters = useCallback(() => {
+    setSearchQuery('');
+    setActiveDept(null);
+  }, []);
+
+  const handleCloseToast = useCallback(() => {
+    setToast(prev => ({ ...prev, visible: false }));
+  }, []);
 
   return (
     <div className="min-h-screen bg-navy-gradient">
