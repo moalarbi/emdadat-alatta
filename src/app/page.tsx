@@ -67,13 +67,6 @@ export default function Home() {
     });
   }, []);
   const handleReportSubmit = useCallback((data: { name: string; ext: string; note: string }) => {
-    console.log('Report submitted:', data);
-    setToast({
-      message: 'تم إرسال البلاغ بنجاح ✅',
-      visible: true,
-      type: 'success'
-    });
-  }, []);
   const handleCloseToast = useCallback(() => {
     setToast(prev => ({ ...prev, visible: false }));
   }, []);
@@ -112,14 +105,10 @@ export default function Home() {
           </p>
         </motion.section>
         {/* Search */}
-        <section className="mb-6">
-          <SearchBar 
             value={searchQuery} 
             onChange={setSearchQuery} 
           />
         </section>
-        <section className="mb-6">
-        {/* Department Tabs */}
         <section className="mb-4">
           <DeptTabs
             departments={departments}
