@@ -64,9 +64,9 @@ export default function InsightsChart({ data }: InsightsChartProps) {
               tickLine={false}
               tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
               interval={0}
-              angle={window?.innerWidth < 640 ? -45 : 0}
-              textAnchor={window?.innerWidth < 640 ? 'end' : 'middle'}
-              height={window?.innerWidth < 640 ? 50 : 30}
+              angle={typeof window !== 'undefined' && window.innerWidth < 640 ? -45 : 0}
+              textAnchor={typeof window !== 'undefined' && window.innerWidth < 640 ? 'end' : 'middle'}
+              height={typeof window !== 'undefined' && window.innerWidth < 640 ? 50 : 30}
             />
             <YAxis 
               axisLine={false}
